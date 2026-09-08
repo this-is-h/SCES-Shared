@@ -1,0 +1,63 @@
+{
+    "name": "@sces/shared",
+    "version": "0.1.0",
+    "license": "UNLICENSED",
+    "private": true,
+    "type": "module",
+    "description": "三端共享层：数据模型、加密、计算引擎、状态机、校验规则",
+    "engines": {
+        "node": ">=20.19.0"
+    },
+    "packageManager": "pnpm@10.9.0",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "import": "./src/index.ts"
+        },
+        "./types": {
+            "types": "./src/types/index.ts",
+            "import": "./src/types/index.ts"
+        },
+        "./crypto": {
+            "types": "./src/crypto/index.ts",
+            "import": "./src/crypto/index.ts"
+        },
+        "./license": {
+            "types": "./src/license/index.ts",
+            "import": "./src/license/index.ts"
+        },
+        "./fingerprint": {
+            "types": "./src/fingerprint.ts",
+            "import": "./src/fingerprint.ts"
+        },
+        "./crypto/sign": {
+            "types": "./src/crypto/sign.ts",
+            "import": "./src/crypto/sign.ts"
+        }
+    },
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "prepare": "husky",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "type-check": "tsc --noEmit",
+        "build": "tsc -p tsconfig.build.json"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@noble/ciphers": "^1.2.1",
+        "@noble/hashes": "^1.7.1",
+        "@types/node-forge": "^1.3.14",
+        "@vitest/coverage-v8": "^4.1.0",
+        "husky": "^9.1.7",
+        "node-forge": "^1.4.0",
+        "typescript": "~5.9.3",
+        "vitest": "^4.1.0"
+    }
+}
