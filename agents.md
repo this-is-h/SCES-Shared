@@ -16,6 +16,6 @@
 
 ## 当前重点
 
-- 共享层未创建，是**最先开发**的模块（M0），其他端依赖它。
-- 约束：纯 TypeScript、无平台依赖、三端复用。
-- 开发前必读 `docs/ARCHITECTURE.md`。
+- 在线化：`@sces/shared` v0.2.0 已移除离线授权链（license/、fingerprint、crypto/sign、ids/），仅保留在线所需的 .dyf 混合加密、计算、状态机、校验与导入规范化。
+- 消费方：管理端（git 依赖）、微信小程序（`scripts/sync-shared.mjs` 源码镜像）。
+- 约束：纯 TypeScript、无平台依赖（Node/浏览器/小程序三端复用）、ES2017 语法上限（供微信镜像）。

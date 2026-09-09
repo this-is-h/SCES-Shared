@@ -1,6 +1,6 @@
 # SCES-Shared — 三端共享层
 
-学生综合素质测评管理系统（SCES）· 共享层（`@sces/shared`）：数据模型、加密（.dyf 容器 v2）、计算引擎、状态机、校验规则、离线授权链。
+学生综合素质测评管理系统（SCES）· 共享层（`@sces/shared`）：数据模型、加密（.dyf 容器 v2）、计算引擎、状态机、校验规则。
 
 ## 开发规范（必读，新会话遵守）
 
@@ -14,7 +14,7 @@
 ### 提交规范（commit-msg 钩子强制）
 格式：`<type>(<scope>): <subject>`
 - `type` 必填：`feat` `fix` `docs` `style` `refactor` `perf` `test` `chore` `build` `ci` `revert`
-- `scope` 可选、小写（本仓：crypto/calc/types/state/validate/ids/import/license/fingerprint/docs/build/ci/deps）
+- `scope` 可选、小写（本仓：crypto/calc/types/state/validate/import/docs/build/ci/deps）
 - `subject` 必填：祈使句、首字母小写、**≤50 字符**、句尾无句号；header ≤72
 - 违规提交会被 commitlint 直接拒绝（示例：`feat(crypto): 添加 dyf 容器 v2 分块加密`）
 
@@ -28,7 +28,7 @@
 
 ## 消费方与分发
 
-- 管理端 SCES-Management-Desktop-Electron：git 依赖 `git+https://github.com/this-is-h/SCES-Shared.git#semver:^0.1.0`
+- 管理端 SCES-Management-Desktop-Electron：git 依赖 `git+https://github.com/this-is-h/SCES-Shared.git#semver:^0.1.0`（0.2.0 发布后切 `^0.2.0`）
 - 微信小程序 SCES-User-Wechat：不走 npm，`../SCES-User-Wechat/scripts/sync-shared.mjs` 从本仓源码镜像到 `miniprogram/shared/`
 - 纯 TS 源码包（main/types → src/index.ts），消费端各自 bundle
 
@@ -41,10 +41,7 @@
 | `calc/` | 德育分计算引擎（dyf-total/rank/weighted/formula） | 是 |
 | `state/` | 批次/申请/最终结论状态机 | 是 |
 | `validate/` | 校验规则 | 是 |
-| `ids/` | 批次 id 派生 | 是 |
 | `import/` | 导入规范化 | 是 |
-| `license/` | 离线授权链（Node-only，不镜像） | 否 |
-| `fingerprint.ts` / `crypto/sign.ts` | 离线授权设施（Node-only） | 否 |
 
 ## 命令（仓库根）
 
@@ -60,8 +57,8 @@ node scripts/build-noble-vendor.mjs    # 重新预打包 noble（vendored 进 sr
 
 ## 微信镜像注意
 
-`../SCES-User-Wechat/miniprogram/shared/` 是受控镜像：排除 Node-only 路径（license/sign/fingerprint），要求 ES2017 语法上限（无 `?.`/`??`，用 `src/nullish.ts` 的 `nz`/`opt`）。改本仓源码后需在 SCES-User-Wechat 运行 `npm run sync:shared` 并提交镜像。
+`../SCES-User-Wechat/miniprogram/shared/` 是受控镜像：仅排除测试文件与 Node-only 入口（`crypto/vendor/noble-entry.ts`），要求 ES2017 语法上限（无 `?.`/`??`，用 `src/nullish.ts` 的 `nz`/`opt`）。改本仓源码后需在 SCES-User-Wechat 运行 `npm run sync:shared` 并提交镜像。
 
 ## 在线化方向
 
-服务端（SCES-Server，M5）建成后授权/配置下发改为服务端驱动；license/fingerprint/sign 等离线授权链将随模块级下线移除。
+服务端（SCES-Server / SCES-Server-Vercel）建成后授权/配置/批次/状态下发改为服务端驱动；离线授权链（license/、fingerprint、crypto/sign、ids/offline-batch-id）已随 0.2.0 **移除**，不再维护。.dyf 混合加密（crypto/）保留——服务端不存分数/证明材料，学生数据仍以加密文件为载体。

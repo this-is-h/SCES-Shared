@@ -17,14 +17,11 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const SHARED = path.join(ROOT, 'shared')
-const ENTRY = path.join(SHARED, 'src', 'crypto', 'vendor', 'noble-entry.ts')
-const OUT = path.join(SHARED, 'src', 'crypto', 'vendor', 'noble.js')
+const ENTRY = path.join(ROOT, 'src', 'crypto', 'vendor', 'noble-entry.ts')
+const OUT = path.join(ROOT, 'src', 'crypto', 'vendor', 'noble.js')
 
-// 优先用 shared 本地 esbuild（vite 依赖），否则回退 npx（Windows 需 .cmd）
+// 优先用本地 esbuild（vite 依赖），否则回退 npx（Windows 需 .cmd）
 const esbuildBin = [
-  path.join(SHARED, 'node_modules', '.bin', 'esbuild.cmd'),
-  path.join(SHARED, 'node_modules', '.bin', 'esbuild'),
   path.join(ROOT, 'node_modules', '.bin', 'esbuild.cmd'),
   path.join(ROOT, 'node_modules', '.bin', 'esbuild'),
 ].find((p) => existsSync(p))
@@ -41,7 +38,7 @@ const args = [
 try {
   execFileSync(esbuildBin ?? 'esbuild', args, {
     stdio: 'inherit',
-    cwd: SHARED,
+    cwd: ROOT,
     // Windows 下 .cmd 需经 shell 执行
     shell: process.platform === 'win32',
   })

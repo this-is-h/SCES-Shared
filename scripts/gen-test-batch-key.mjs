@@ -9,9 +9,8 @@
  * 输出：docs/fixtures/test-batch-keypair.ts —— 完整密钥对（公钥 + 私钥）+ 固定 testBatchId。
  *   仅测试用；私钥绝不进入任何端产物。
  *
- * 说明：M-O2 后小程序不再内置批次数据模块（批次公钥经「管理端导出公钥包 .dysk →
- *   pnpm license-kit cert:issue → pnpm sync:profile」回环编译进 offline/batches/*.js），
- *   故本脚本只再生成夹具，不写任何小程序侧文件。
+ * 说明：批次公钥自 M5 起由服务端接口下发（`.dysk → cert:issue → 编译进包` 的离线回环已随
+ *   离线版下线移除）；本脚本仅用于重新生成测试夹具，不写任何小程序侧文件。
  *
  * 用法：
  *   node scripts/gen-test-batch-key.mjs

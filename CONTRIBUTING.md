@@ -14,7 +14,7 @@
 
 ## 提交规范（commit-msg 强制）
 格式 `<type>(<scope>): <subject>`；type ∈ feat/fix/docs/style/refactor/perf/test/chore/build/ci/revert；
-scope 小写（crypto/calc/types/state/validate/ids/import/license/fingerprint/docs/build/ci/deps）；
+scope 小写（crypto/calc/types/state/validate/import/docs/build/ci/deps）；
 subject ≤50 字符、小写、祈使句。纪律：每提交单一问题；单次 ≤300 行；提交前 type-check + 相关测试。
 
 ## 钩子与 CI 门禁
