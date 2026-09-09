@@ -11,8 +11,8 @@
  * （`Cipher.encrypt` 仅支持 PKCS1v1.5，无 `encryptOAEP`），互通 gating 失败，
  * 遂按回退策略改用 node-forge 实现 RSA-OAEP，AES/SHA 仍用 @noble。接口不变。
  *
- * 注意：本模块**不从 shared 顶层导出**（避免 server/management 打包引入 node-forge）。
- * 消费方显式 import：`import { createPortableProvider } from '@sces/shared/crypto/portable-provider'`。
+ * 注意：本模块**不从 shared 顶层导出**（避免 server/management 打包引入 node-forge），
+ * 也未设包子路径导出；消费方为微信小程序——经 `scripts/sync-shared.mjs` 源码镜像以相对路径使用。
  */
 import forge from 'node-forge'
 // 微信「构建 npm」不支持子路径导入（@noble/* 主入口又故意抛错），
