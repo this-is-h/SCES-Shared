@@ -1,6 +1,6 @@
 {
     "name": "@sces/shared",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "license": "UNLICENSED",
     "private": true,
     "type": "module",
@@ -23,18 +23,6 @@
         "./crypto": {
             "types": "./src/crypto/index.ts",
             "import": "./src/crypto/index.ts"
-        },
-        "./license": {
-            "types": "./src/license/index.ts",
-            "import": "./src/license/index.ts"
-        },
-        "./fingerprint": {
-            "types": "./src/fingerprint.ts",
-            "import": "./src/fingerprint.ts"
-        },
-        "./crypto/sign": {
-            "types": "./src/crypto/sign.ts",
-            "import": "./src/crypto/sign.ts"
         }
     },
     "files": [
