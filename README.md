@@ -1,14 +1,14 @@
 # SCES-Shared — 三端共享层
 
-学生综合素质测评管理系统（SCES）· 共享层（@sces/shared）：数据模型、加密（.dyf 容器 v2）、计算引擎、状态机、校验规则、离线授权链。
+学生综合素质测评管理系统（SCES）· 共享层（@sces/shared）：数据模型、加密（.dyf 容器 v2）、计算引擎、状态机、校验规则。
 
 ## 消费方（git 依赖 + tag 私包，不发布公开 registry）
-- 管理端 SCES-Management-Desktop-Electron：`"@sces/shared": "git+https://github.com/this-is-h/SCES-Shared.git#semver:^0.1.0"`（本地开发 `file:../SCES-Shared`）；
+- 管理端 SCES-Management-Desktop-Electron：`"@sces/shared": "git+https://github.com/this-is-h/SCES-Shared.git#semver:^0.1.0"`（0.2.0 发布后切 `^0.2.0`；本地开发 `file:../SCES-Shared`）；
 - 微信小程序 SCES-User-Wechat：不走 npm，`scripts/sync-shared.mjs` 源码按 tag 镜像到 `miniprogram/shared/`；
 - 契约种子源 SCES-Server 依赖 `@sces/contracts`。
 
 ## 打包与分发
-纯 TS 源码包（main/types 指向 src/index.ts），消费端各自 bundle；exports 子路径：`.`、`./types`、`./crypto`、`./license`、`./fingerprint`、`./crypto/sign`。
+纯 TS 源码包（main/types 指向 src/index.ts），消费端各自 bundle；exports 子路径：`.`、`./types`、`./crypto`。
 版本打 tag（vX.Y.Z）发布；pnpm-lock 锁定 commit。
 
 ## 命令（仓库根）
@@ -22,7 +22,7 @@ node scripts/build-noble-vendor.mjs   # 重新预打包 noble
 ```
 
 ## 微信镜像注意
-`miniprogram/shared/` 镜像排除 Node-only 路径（license/sign/fingerprint），要求 ES2017（无 ?. / ??）。改 shared 源码后，SCES-User-Wechat 运行 `npm run sync:shared` 并提交镜像。
+`miniprogram/shared/` 镜像仅排除测试文件与 Node-only 入口（`crypto/vendor/noble-entry.ts`），要求 ES2017（无 ?. / ??）。改 shared 源码后，SCES-User-Wechat 运行 `npm run sync:shared` 并提交镜像。
 
 ## 在线化方向
-服务端（SCES-Server，M5）建成后授权/配置下发改为服务端驱动；shared 的 license/fingerprint/sign 等离线授权链将随模块级下线逐步移除。
+服务端（SCES-Server / SCES-Server-Vercel）建成后授权/配置/批次/状态下发改为服务端驱动；shared 的离线授权链（license/fingerprint/sign/offline-batch-id）已随 0.2.0 移除，不再维护。.dyf 混合加密保留——服务端不存分数/证明材料，学生数据仍以加密文件为载体。
