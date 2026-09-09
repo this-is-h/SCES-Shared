@@ -89,7 +89,7 @@ export interface OfflineLicenseHeader {
 /** `.dysl` 机密段明文。**不含任何私钥**（决策 #41 修订）。 */
 export interface OfflineLicenseSecret {
     unit: UnitRef
-    /** 完整 UnitConfig，逐字节取自 `server/contracts/seed/<configId>.json` */
+    /** 完整 UnitConfig，逐字节取自 `SCES-Server/contracts/seed/<configId>.json` */
     configTemplate: UnitConfig
     features: { maxDelegations: number }
 }

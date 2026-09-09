@@ -3,7 +3,7 @@
  *
  * 不从 `shared/src/index.ts` 导出、不镜像进小程序：
  * 依赖 Node WebCrypto 的 PBKDF2 与 RSA-PSS，且小程序不需要授权文件能力。
- * 消费方走子路径 `@dms/shared/license` 或相对路径 `shared/src/license/index.ts`。
+ * 消费方走子路径 `@sces/shared/license` 或相对路径 `shared/src/license/index.ts`。
  */
 export type {
     DysFileEnvelope,

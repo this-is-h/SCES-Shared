@@ -121,7 +121,7 @@ interface Batch {
 
 ### 2.3 单位配置（`types/unit-config.ts`）
 
-手写 TS 映射，逐字段对齐 `server/contracts/unit-config.schema.json`（配置结构**唯一权威**，决策 #38）。防漂移由 `unit-config.test.ts`（编译期 satisfies + 运行期读契约种子抽样）把关。
+手写 TS 映射，逐字段对齐 `SCES-Server/contracts/unit-config.schema.json`（配置结构**唯一权威**，决策 #38）。防漂移由 `unit-config.test.ts`（编译期 satisfies + 运行期读契约种子抽样）把关。
 
 ```ts
 type UnitConfigStatus = 'draft' | 'published' | 'archived'
@@ -619,12 +619,12 @@ useWebCryptoProvider()   // 应用启动时调用一次
 小程序无 Web Crypto API，M2 起使用 shared 内置的**可移植 CryptoProvider**（`crypto/portable-provider.ts`，node-forge RSA-OAEP-SHA256 + @noble AES-GCM/SHA-256），与管理端（WebCrypto）互通由 `interop.test.ts` 验证。
 
 ```ts
-// 小程序启动时（app.ts onLaunch）调用一次；实现见 user/wechat/miniprogram/utils/crypto.ts
+// 小程序启动时（app.ts onLaunch）调用一次；实现见 SCES-User-Wechat/miniprogram/utils/crypto.ts
 import { setupWechatCryptoProvider } from '../../utils/crypto'
 setupWechatCryptoProvider()
 ```
 
-**两个关键适配点**（详见 `user/wechat/miniprogram/utils/crypto.ts`）：
+**两个关键适配点**（详见 `SCES-User-Wechat/miniprogram/utils/crypto.ts`）：
 
 1. **随机源**：`wx.getRandomValues` 是**异步** API，而 `CryptoProvider.randomBytes` 为同步接口，采用"异步预热随机池 + 同步取用"：`setupWechatCryptoProvider()` 启动时预热，导出前 `await ensureRandomPool()` 确保就绪。
 2. **node-forge PRNG 种子**：RSA-OAEP 的种子取自 `forge.random`，小程序环境默认退化为 Math.random（弱随机），初始化时必须覆盖 `forge.random.seedFileSync` 指向上述强随机池。

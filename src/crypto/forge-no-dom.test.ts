@@ -9,7 +9,7 @@
  * 修复（M2 落地，双保险）：
  * 1. **lib 级修补**（根治）：`scripts/patch-node-forge.mjs` 为 `util.js`（globalScope 增加
  *    globalThis 回退）与 `random.js`/`prng.js`（crypto 访问判空）打防御性补丁，
- *    修补 `user/wechat/miniprogram/node_modules/node-forge/lib/*.js` 与已构建的
+ *    修补 `SCES-User-Wechat/miniprogram/node_modules/node-forge/lib/*.js` 与已构建的
  *    `miniprogram_npm/node-forge/index.js`（运行本测试前需先执行该脚本）；
  * 2. **env-shim**（兜底）：`utils/env-shim.ts` 将 `self` 指向全局对象（Web Worker 式全局），
  *    并在 `utils/crypto.ts` 中先于 node-forge 加载；

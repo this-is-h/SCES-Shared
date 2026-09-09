@@ -1,49 +1,67 @@
-# shared — 共享层
+# SCES-Shared — 三端共享层
 
-## 项目概述
+学生综合素质测评管理系统（SCES）· 共享层（`@sces/shared`）：数据模型、加密（.dyf 容器 v2）、计算引擎、状态机、校验规则、离线授权链。
 
-三端共享代码（TypeScript 包），**M0 已完成**。加密、数据模型、计算引擎、状态机、校验规则收敛于此，供服务端（server）、管理端（management/desktop）、学生端（user/wechat）复用，避免三端逻辑漂移。
+## 开发规范（必读，新会话遵守）
 
-## 文档
+本仓库采用**简化版 Git Flow** 与 **Conventional Commits（约定式提交）**，由 husky 钩子与 CI 强制落地。详情见 `CONTRIBUTING.md`。
 
-| 文档 | 内容 |
-|------|------|
-| `docs/API.md` | **完整 API 参考**：模块功能、导出签名、参数、返回值、调用示例、平台适配 |
-| `README.md` | 快速上手：初始化、最小示例、开发命令 |
-| `docs/ARCHITECTURE.md`（根目录） | 系统架构与设计背景 |
+### 分支模型
+- 长期分支：`main`（生产，仅发布，禁直推）、`develop`（日常开发，默认分支，PR 指向这里）
+- 短期分支：`feature/*`、`bugfix/*`、`hotfix/*`、`chore/*`、`release/*`（从 develop 创建，完成 PR 合并回 develop；hotfix 从 main 创建，合并回 main 与 develop）
+- 分支名必须以前缀开头（CI 校验）；`main`/`develop` 开启保护（个人账号仓库暂无法强制，需自觉遵守）
+
+### 提交规范（commit-msg 钩子强制）
+格式：`<type>(<scope>): <subject>`
+- `type` 必填：`feat` `fix` `docs` `style` `refactor` `perf` `test` `chore` `build` `ci` `revert`
+- `scope` 可选、小写（本仓：crypto/calc/types/state/validate/ids/import/license/fingerprint/docs/build/ci/deps）
+- `subject` 必填：祈使句、首字母小写、**≤50 字符**、句尾无句号；header ≤72
+- 违规提交会被 commitlint 直接拒绝（示例：`feat(crypto): 添加 dyf 容器 v2 分块加密`）
+
+### 提交纪律
+- 每提交解决一个问题；单次 ≤300 行；提交前自测（`pnpm type-check` + 相关测试）
+
+### 钩子与 CI 门禁
+- `pre-commit`：`pnpm type-check`；`commit-msg`：commitlint
+- CI：编译 + 测试（**覆盖率 ≥80%**，v8 thresholds） + 类型 + `pnpm audit`(high 阻断) + gitleaks + 分支名校验
+- 发布：develop 成熟 → 合并 main → 打 `vX.Y.Z` tag（git 依赖 + tag 分发，release.yml 自动建 Release）
+
+## 消费方与分发
+
+- 管理端 SCES-Management-Desktop-Electron：git 依赖 `git+https://github.com/this-is-h/SCES-Shared.git#semver:^0.1.0`
+- 微信小程序 SCES-User-Wechat：不走 npm，`../SCES-User-Wechat/scripts/sync-shared.mjs` 从本仓源码镜像到 `miniprogram/shared/`
+- 纯 TS 源码包（main/types → src/index.ts），消费端各自 bundle
 
 ## 模块
 
-| 模块 | 职责 |
-|------|------|
-| `types/` | 数据模型类型（batch/student/apply/revision/score/final_grade/audit_log/dyf-file） |
-| `crypto/` | 混合加密（RSA-OAEP + AES-GCM）、SHA-256、base64/utf8，平台适配器模式 |
-| `calc/` | 计算引擎（weighted 实现 + formula 预留）、德育分总分、排名 |
-| `state/` | 状态机（apply/batch/final，单向推进） |
-| `validate/` | 校验规则（学号、冲突、可疑导入、必填） |
+| 模块 | 职责 | 微信镜像 |
+|------|------|---------|
+| `types/` | 数据模型（batch/student/apply/revision/score/dyf/timeline…） | 是 |
+| `crypto/` | 混合加密（RSA-OAEP + AES-GCM）、.dyf 容器 v2、noble 预打包 | 是 |
+| `calc/` | 德育分计算引擎（dyf-total/rank/weighted/formula） | 是 |
+| `state/` | 批次/申请/最终结论状态机 | 是 |
+| `validate/` | 校验规则 | 是 |
+| `ids/` | 批次 id 派生 | 是 |
+| `import/` | 导入规范化 | 是 |
+| `license/` | 离线授权链（Node-only，不镜像） | 否 |
+| `fingerprint.ts` / `crypto/sign.ts` | 离线授权设施（Node-only） | 否 |
 
-## 核心设计约束
-
-1. **纯 TypeScript，无平台依赖**：需同时兼容浏览器（web）、Node（server/management-desktop）、小程序（user-wechat）。平台差异（如 `crypto.subtle` 不可用）由各端通过 `CryptoProvider` 适配器注入，shared 内不引入平台 API。
-2. **三端复用**：加密、数据模型、计算引擎、状态机必须从 `shared` 引用，禁止各端重复实现。
-3. **命名规范**：见 `docs/ARCHITECTURE.md` §2（`batchId`/`applyId`/`revision` 等）。
-4. **测试**：Vitest 单元测试，覆盖计算引擎、状态机、校验规则、加密。
-
-## 使用
-
-- 浏览器 / Node 18+：启动时调用 `useWebCryptoProvider()` 注册默认加密实现。
-- 微信小程序：基于 `wx` API 实现 `CryptoProvider` 并 `setCryptoProvider()` 注入。
-
-## 开发命令
+## 命令（仓库根）
 
 ```sh
 pnpm install
-pnpm test          # Vitest 单元测试
-pnpm test:coverage # 覆盖率
-pnpm type-check    # TypeScript 类型检查
-pnpm build         # 输出 dist（ESM + d.ts）
+pnpm test            # Vitest 全量
+pnpm test:coverage   # 覆盖率（阈值 ≥80%）
+pnpm type-check      # tsc --noEmit
+pnpm build           # 声明产物 dist/
+node scripts/gen-test-batch-key.mjs    # 重新生成测试密钥夹具（docs/fixtures/，gitignore）
+node scripts/build-noble-vendor.mjs    # 重新预打包 noble（vendored 进 src/crypto/vendor/）
 ```
 
-## 里程碑
+## 微信镜像注意
 
-M0 共享层（本包）是最先开发的模块，其他端依赖它。开发前必读 `docs/ARCHITECTURE.md`。
+`../SCES-User-Wechat/miniprogram/shared/` 是受控镜像：排除 Node-only 路径（license/sign/fingerprint），要求 ES2017 语法上限（无 `?.`/`??`，用 `src/nullish.ts` 的 `nz`/`opt`）。改本仓源码后需在 SCES-User-Wechat 运行 `npm run sync:shared` 并提交镜像。
+
+## 在线化方向
+
+服务端（SCES-Server，M5）建成后授权/配置下发改为服务端驱动；license/fingerprint/sign 等离线授权链将随模块级下线移除。

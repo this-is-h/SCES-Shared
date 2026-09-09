@@ -6,9 +6,9 @@ import type { UnitConfig } from './unit-config'
 
 /**
  * UnitConfig 防漂移测试（决策 #38：配置结构唯一权威在
- * `server/contracts/unit-config.schema.json`；本文件是该 schema 的手写 TS 映射）。
+ * `SCES-Server/contracts/unit-config.schema.json`；本文件是该 schema 的手写 TS 映射）。
  *
- * shared 不依赖 @dms/contracts 包（纯 TS + 小程序机械 vendoring），故用两层校验
+ * shared 不依赖 @sces/contracts 包（纯 TS + 小程序机械 vendoring），故用两层校验
  * 顶住手写类型与契约 schema 漂移：
  * - 编译期：内联样本 `satisfies UnitConfig`（覆盖三种 scoreType + support 两态），
  *   类型缺字段/写错立即 tsc 报错。

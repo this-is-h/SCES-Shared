@@ -3,7 +3,7 @@
  *
  * 为什么需要：离线模式下学生端小程序在**编译期**就要知道 batchId（配置随包下发），
  * 而管理端在**运行期**创建批次。两端必须算出同一个 id，否则
- * `management/desktop/src/main/services/import.ts` 的 `payload.batchId !== batch.batchId`
+ * `SCES-Management-Desktop-Electron/src/main/services/import.ts` 的 `payload.batchId !== batch.batchId`
  * 硬校验永远不成立，`.dyf` 永远导不进去。
  *
  * 为什么是 UUIDv8 而不是 v5：v5 要求 SHA-1，而 `CryptoProvider` 只暴露 SHA-256

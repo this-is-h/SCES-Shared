@@ -3,7 +3,7 @@ import type { EpochMs } from './common'
 /**
  * 单位配置（UnitConfig）：一个二级单位一份。
  *
- * 结构与 `server/contracts/unit-config.schema.json`（JSON Schema 2020-12，配置结构**唯一权威**）
+ * 结构与 `SCES-Server/contracts/unit-config.schema.json`（JSON Schema 2020-12，配置结构**唯一权威**）
  * 逐字段对齐——本文件是该 schema 的手写 TypeScript 映射（决策 #38：契约唯一权威）。
  * shared 是纯 TS 包且被小程序机械 vendoring，不引入 codegen；防止与 schema 漂移由
  * `unit-config.test.ts`（编译期 satisfies + 运行期读契约种子抽样）把关。
@@ -196,7 +196,7 @@ export interface UnitRankConfig {
 }
 
 /**
- * 单位配置：一个二级单位一份（决策 #38：server/contracts/seed/ 种子为唯一权威）。
+ * 单位配置：一个二级单位一份（决策 #38：SCES-Server/contracts/seed/ 种子为唯一权威）。
  */
 export interface UnitConfig {
     /** 本 schema 的版本号，当前固定为 1。 */

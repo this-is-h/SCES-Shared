@@ -1,4 +1,4 @@
-# shared 共享层 — Agents
+# SCES-Shared — Agents — Agents
 
 本目录的 Claude Code 子代理定义位于根目录 `.claude/agents/`（Claude Code 实际加载的位置）。
 

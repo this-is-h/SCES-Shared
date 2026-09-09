@@ -6,7 +6,7 @@
  *   为签名扩接口会波及小程序侧的 portable-provider（决策 #5 的 vendor 打包坑）。
  * - 签名与验签**只发生在 Node 侧**（管理端主进程、服务商 CLI），那里 Web Crypto 必然可用。
  * - 因此本文件**不镜像进小程序**（`scripts/sync-shared.mjs` 排除），也**不从 `shared/src/index.ts` 导出**，
- *   消费方走子路径 `@dms/shared/crypto/sign` 或相对路径。
+ *   消费方走子路径 `@sces/shared/crypto/sign` 或相对路径。
  */
 import type { Jwk } from '../types'
 import { base64ToBytes, bytesToBase64 } from './encoding'
