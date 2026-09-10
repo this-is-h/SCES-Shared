@@ -34,7 +34,8 @@
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
         "type-check": "tsc --noEmit",
-        "build": "tsc -p tsconfig.build.json"
+        "build": "tsc -p tsconfig.build.json",
+        "test:ci": "node scripts/run-ci-tests.mjs"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",

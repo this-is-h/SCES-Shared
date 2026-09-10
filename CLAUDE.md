@@ -47,13 +47,18 @@
 
 ```sh
 pnpm install
-pnpm test            # Vitest 全量
-pnpm test:coverage   # 覆盖率（阈值 ≥80%）
+pnpm test            # Vitest 全量（本地含兄弟仓种子套件）
+pnpm test:ci         # CI 等价门禁：SCES_NO_SIBLING=1 + 覆盖率（每次 push 前必跑）
+pnpm test:coverage   # 覆盖率（本地阈值 ≥80%）
 pnpm type-check      # tsc --noEmit
 pnpm build           # 声明产物 dist/
-node scripts/gen-test-batch-key.mjs    # 重新生成测试密钥夹具（docs/fixtures/，gitignore）
+node scripts/gen-test-batch-key.mjs    # 重新生成测试密钥夹具（docs/fixtures/test-batch-keypair.ts，已入库）
 node scripts/build-noble-vendor.mjs    # 重新预打包 noble（vendored 进 src/crypto/vendor/）
 ```
+
+## 提交前门禁（约定）
+
+**每次 push 前必须**：`pnpm test`（本地全量）与 `pnpm test:ci`（独立 CI 等价）双通过 + `pnpm type-check` + `pnpm build`，随后再合并推送。
 
 ## 微信镜像注意
 
