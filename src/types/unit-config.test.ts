@@ -135,7 +135,9 @@ describe('UnitConfig 编译期样本', () => {
 })
 
 describe.skipIf(!SEED_AVAILABLE)('UnitConfig 与契约种子结构对齐（防漂移）', () => {
-    const seed = loadSeed()
+    // describe 回调在收集期即执行，跳过时也不能读不存在的兄弟仓种子：
+    // 缺种给空对象占位（its 被 skipIf 跳过，不会读取）。
+    const seed: Record<string, unknown> = SEED_AVAILABLE ? loadSeed() : {}
 
     it('顶层字段与 schema 一致', () => {
         expect(seed.schemaVersion).toBe(1)
