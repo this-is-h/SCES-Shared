@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -116,6 +116,8 @@ const SEED_PATH = resolve(
     dirname(fileURLToPath(import.meta.url)),
     '../../../SCES-Server/contracts/seed/lixing-shuyuan.json',
 )
+/** 独立 CI（无 SCES-Server 兄弟检出）时种子缺失：种子对齐套件整体跳过，其余套件照跑。 */
+const SEED_AVAILABLE = existsSync(SEED_PATH)
 
 function loadSeed(): Record<string, unknown> {
     return JSON.parse(readFileSync(SEED_PATH, 'utf-8')) as Record<string, unknown>
@@ -132,7 +134,7 @@ describe('UnitConfig 编译期样本', () => {
     })
 })
 
-describe('UnitConfig 与契约种子结构对齐（防漂移）', () => {
+describe.skipIf(!SEED_AVAILABLE)('UnitConfig 与契约种子结构对齐（防漂移）', () => {
     const seed = loadSeed()
 
     it('顶层字段与 schema 一致', () => {
