@@ -10,4 +10,3 @@ coverage
 *.tsbuildinfo
 .eslintcache
 __screenshots__/
-docs/fixtures/
