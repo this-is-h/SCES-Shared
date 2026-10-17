@@ -12,11 +12,12 @@ jobs:
   branch-name:
     name: 分支名校验（简化版 Git Flow）
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       - name: 校验分支前缀
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
         run: |
-          ref="${{ github.ref_name }}"
+          ref="$BRANCH_NAME"
           case "$ref" in
             main|develop|feature/*|bugfix/*|hotfix/*|chore/*|release/*)
               ;;
